@@ -2,7 +2,10 @@
 
 session_start();
 
-if (!isset($_SESSION['id'])) {
+if (!isset($auth)) {
+	# code...
+	if (!isset($_SESSION['id'])) {
 	# code...
 	header('location:' . WEBROOT . 'login.php');
+   }
 }
