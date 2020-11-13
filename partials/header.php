@@ -28,3 +28,8 @@
 
       </div>
     </nav>
+
+    <div class="container">
+       <?= flash(); ?>
+    </div>
+

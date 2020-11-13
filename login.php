@@ -1,4 +1,6 @@
-<?php $auth = 0; 
+<?php 
+
+$auth = 0; 
 include 'lib/includes.php';
 
 /** TRAITEMENT DU FORMULAIRE **/
@@ -13,7 +15,9 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
  	if ($select->rowCount() > 0) {
  		# code...
  		$_SESSION['Auth'] = $select->fetch();
+ 		setFlash('Vous êtes maintenant connecté.');
  		header('location:' . WEBROOT . 'admin/index.php');
+ 		die();
  	}
 
  } 

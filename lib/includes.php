@@ -1,4 +1,8 @@
-<?php include 'constants.php' ?>
-<?php include 'db.php' ?>
-<?php include 'form.php' ?>
-<?php include 'auth.php' ?>
+<?php 
+include 'constants.php';
+include 'db.php' ;
+include 'form.php';
+include 'auth.php';
+// Session_start()
+include 'session.php';
+?>

@@ -7,5 +7,6 @@ if (!isset($auth)) {
 	if (!isset($_SESSION['Auth']['id'])) {
 	# code...
 	header('location:' . WEBROOT . 'login.php');
+	die();
    }
 }

@@ -1,5 +1,7 @@
-<?php include 'lib/includes.php'; ?>
-<?php include 'partials/header.php'; ?>
+<?php 
+include 'lib/includes.php';
+include 'partials/header.php'; 
+?>
   <div role="main" class="container">
 
     <h1>Mon portfolio en PHP</h1>
