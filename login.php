@@ -1,10 +1,31 @@
-<?php $auth = 0; ?>
-<?php include 'lib/includes.php'; ?>
-<?php include 'partials/header.php'; ?>
+<?php $auth = 0; 
+include 'lib/includes.php';
 
-<?php 
-var_dump($_POST)
+/** TRAITEMENT DU FORMULAIRE **/
+
+if (isset($_POST['username']) && isset($_POST['password'])) {
+ 	# code...
+ 	$username = $db->quote($_POST['username']);
+ 	$password = sha1($_POST['password']);
+
+ 	$select = $db->query("SELECT * FROM users WHERE username=$username AND password='$password'");
+
+ 	if ($select->rowCount() > 0) {
+ 		# code...
+ 		$_SESSION['Auth'] = $select->fetch();
+ 		header('location:' . WEBROOT . 'admin/index.php');
+ 	}
+
+ } 
+
+
+/** INCLUSION DU HEADER **/
+
+include 'partials/header.php'; 
+
 ?>
+
+
 
 <div class="container">
 	<div class="row justify-content-center">
@@ -12,7 +33,7 @@ var_dump($_POST)
 			<form action="" method="POST">
 				<div class="form-group">
 					<label for="username">Nom d'utilisateur</label>
-					<input type="text" id="username" name="username" value="<?php if(isset($_POST['username'])) {echo $_POST['username']; } ?>" class="form-control">
+					<?= input('username'); ?>
 				</div>
 				<div class="form-group">
 					<label for="password">Mot de passe</label>
