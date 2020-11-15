@@ -28,6 +28,7 @@ if (isset($_POST['name']) && isset($_POST['slug'])) {
 		$work_id = $db->quote($_GET['id']);
 		$files = $_FILES['images'];
 		$images = array();
+		require '../lib/image.php';
 		foreach ($files['tmp_name'] as $k => $v) {
 			# code...
 			$images = array(
@@ -41,6 +42,7 @@ if (isset($_POST['name']) && isset($_POST['slug'])) {
 				$image_id = $db->lastInsertId();
 				$image_name = $image_id . '.' . $extension;
 				move_uploaded_file($images['tmp_name'], IMAGES . '/works/' . $image_name);
+				resizeImage(IMAGES . '/works/' . $image_name, 150, 150);
 				$image_name = $db->quote($image_name);
 				$db->query("UPDATE images SET name=$image_name WHERE id=$image_id");
 		    }
@@ -76,6 +78,14 @@ if (isset($_GET['delete_image'])) {
 	$id = $db->quote($_GET['delete_image']);
 	$select = $db->query("SELECT name, work_id FROM images WHERE id = $id");
 	$image = $select->fetch();
+	$images = glob(IMAGES . '/works/' . pathinfo($image['name'], PATHINFO_FILENAME) . '_*x*.*');
+	if (is_array($images)) {
+		# code...
+		foreach ($images as $v) {
+			# code...
+			unlink($v);
+		}
+	}
 	unlink(IMAGES . '/works/' . $image['name']);
 	$db->query("DELETE FROM images WHERE id=$id");
 	setFlash("L'image a bien été supprimée.");
@@ -115,9 +125,9 @@ include '../partials/admin_header.php';
 		<a href="work.php" class="btn btn-secondary btn-sm">Mes réalisations</a>
 	</p>
 
-	<div class="row">
-		<div class="col-md-5">
-			<form action="" method="post" enctype="multipart/form-data">
+	<div>
+		<form class="row" action="" method="post" enctype="multipart/form-data">
+			<div class="col-md-6">
 				<div class="form-group">
 					<label for="name">Nom de la réalisation</label>
 					<?= input('name') ?>
@@ -134,24 +144,26 @@ include '../partials/admin_header.php';
 					<label for="category_id">Catégorie</label>
 					<?= select('category_id', $categories_list) ?>
 				</div>
-				<div class="form-group">
+				
+				<?= csrfInput() ?>
+				<button type="submit" class="btn btn-secondary">Enregistrer</button>
+			</div>
+			<div class="col-md-6">
+			    <?php foreach($images as $k => $image): ?>
+			    	<a href="?delete_image=<?= $image['id']; ?>&<?= csrf(); ?>" onclick="return confirm('Etes-vous sûr de cette opération?');">
+					    <img src="<?= WEBROOT; ?>img/works/<?= $image['name']; ?>" width="100">
+				    </a>
+		        <?php endforeach; ?>
+
+		        <div class="form-group">
 					<input type="file" name="images[]">
 					<input type="file" name="images[]" class="d-none" id="duplicate">
 				</div>
 				<p>
 					<a href="#" class="btn btn-success" id="duplicatebtn">Ajouter une image</a>
 				</p>
-				<?= csrfInput() ?>
-				<button type="submit" class="btn btn-secondary">Enregistrer</button>
-			</form>
-		</div>
-		<div class="col-md-7">
-			<?php foreach($images as $k => $image): ?>
-				<a href="?delete_image=<?= $image['id']; ?>&<?= csrf(); ?>" onclick="return confirm('Etes-vous sûr de cette opération?');">
-					<img src="<?= WEBROOT; ?>img/works/<?= $image['name']; ?>" width="100">
-				</a>
-		    <?php endforeach; ?>
-		</div>
+		    </div>
+		</form>
 	</div>
 </div>
 
