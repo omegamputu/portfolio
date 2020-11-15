@@ -28,7 +28,10 @@
 
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a href="#" class="nav-link">Catégories</a>
+            <a href="category.php" class="nav-link">Catégories</a>
+          </li>
+          <li class="nav-item">
+            <a href="work.php" class="nav-link">Réalisations</a>
           </li>
         </ul>
       </div>
