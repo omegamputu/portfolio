@@ -93,6 +93,17 @@ if (isset($_GET['delete_image'])) {
 	die();
 }
 
+if (isset($_GET['highlight_image'])) {
+	# code...
+	checkCsrf();
+	$work_id = $db->quote($_GET['id']);
+	$image_id = $db->quote($_GET['highlight_image']);
+	$db->query("UPDATE works SET image_id=$image_id WHERE id=$work_id");
+	setFlash("L'image a bien été mise en avant.");
+	header('location:work_edit.php?id=' . $_GET['id']);
+	die();
+
+}
 // Récuperation de la liste des catégories
 
 $query = $db->query('SELECT id, name FROM categories ORDER BY name ASC');
@@ -107,7 +118,8 @@ foreach ($categories as $category) {
 
 if (isset($_GET['id'])) {
 	# code...
-	$query = $db->query('SELECT id, name FROM images');
+	$id = $db->quote($_GET['id']);
+	$query = $db->query("SELECT id, name FROM images WHERE work_id = $id");
 	$images = $query->fetchAll();
 }else{
 	$images = array();
@@ -150,9 +162,16 @@ include '../partials/admin_header.php';
 			</div>
 			<div class="col-md-6">
 			    <?php foreach($images as $k => $image): ?>
-			    	<a href="?delete_image=<?= $image['id']; ?>&<?= csrf(); ?>" onclick="return confirm('Etes-vous sûr de cette opération?');">
+			    	<p>
 					    <img src="<?= WEBROOT; ?>img/works/<?= $image['name']; ?>" width="100">
-				    </a>
+
+			    		<a href="?delete_image=<?= $image['id']; ?>&<?= csrf(); ?>" onclick="return confirm('Etes-vous sûr de cette opération?');">
+			    			Supprimer
+				        </a>
+				        <a href="?highlight_image=<?= $image['id']; ?>&id=<?= $_GET['id'] ?>&<?= csrf(); ?>">
+			    			Mettre à la une
+				        </a>
+			    	</p>
 		        <?php endforeach; ?>
 
 		        <div class="form-group">
