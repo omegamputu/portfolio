@@ -15,13 +15,13 @@ if (isset($_GET['delete'])) {
 }
 
 // AFFICHAGE DES works
-$select = $db->query('SELECT id, name, slug FROM works');
+$select = $db->query('SELECT id, name, slug content, category_id FROM works');
 $works = $select->fetchAll(); 
 
 ?>
 
 <div class="container">
-	<h2>Les réalisations</h2>
+	<h2>Mes réalisations</h2>
 
 	<p>
 		<a href="work_edit.php" class="btn btn-secondary btn-sm">Ajouter une réalisation</a>
